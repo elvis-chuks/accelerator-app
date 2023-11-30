@@ -2,6 +2,8 @@ package delivery
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"inventory/delivery/product"
 	"inventory/domain"
 )
 
@@ -15,6 +17,10 @@ func SetupRouter(config Config) *fiber.App {
 	app.Use(cors.New())
 
 	v1 := app.Group("/api/v1")
+
+	productRouter := v1.Group("/product")
+
+	product.New(productRouter, config.ProductRepo)
 
 	return app
 }

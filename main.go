@@ -18,7 +18,7 @@ func main() {
 		panic(err)
 	}
 
-	env.LoadConfig("../")
+	env.LoadConfig(".")
 
 	port := os.Getenv("PORT")
 

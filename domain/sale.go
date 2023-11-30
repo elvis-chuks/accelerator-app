@@ -3,9 +3,11 @@ package domain
 import "time"
 
 type Sale struct {
+	Id          UUID      `json:"id"`
 	ProductName string    `json:"product_name"`
 	ProductId   UUID      `json:"product_id"`
-	Amount      string    `json:"amount"`
+	Amount      int64     `json:"amount"`
+	Total       float64   `json:"total"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

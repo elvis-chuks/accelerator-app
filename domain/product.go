@@ -20,10 +20,18 @@ type Product struct {
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
+type PaginatedProducts struct {
+	Products []Product `json:"products"`
+	Page     int64     `json:"page"`
+	Limit    int64     `json:"limit"`
+	Total    int64     `json:"total"`
+	Next     int64     `json:"next"`
+}
+
 type ProductRepository interface {
 	Create(product Product) (*Product, error)
 	Get(id string) (*Product, error)
 	Update(id string, product Product) (*Product, error)
 	Delete(id string) error
-	GetAll(page, limit int64) ([]Product, error)
+	GetAll(page, limit int64) (*PaginatedProducts, error)
 }

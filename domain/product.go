@@ -34,4 +34,5 @@ type ProductRepository interface {
 	Update(id string, product Product) (*Product, error)
 	Delete(id string) error
 	GetAll(page, limit int64) (*PaginatedProducts, error)
+	GetRestockRecommendation() (*PaginatedProducts, error)
 }

@@ -12,10 +12,18 @@ type Sale struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type PaginatedSales struct {
+	Sales []Sale `json:"sales"`
+	Page  int64  `json:"page"`
+	Limit int64  `json:"limit"`
+	Total int64  `json:"total"`
+	Next  int64  `json:"next"`
+}
+
 type SaleRepository interface {
 	Create(sale Sale) (*Sale, error)
 	Get(id string) (*Sale, error)
 	Update(id string, sale Sale) (*Sale, error)
 	Delete(id string) error
-	GetAll(page, limit int64) ([]Sale, error)
+	GetAll(page, limit int64) (*PaginatedSales, error)
 }

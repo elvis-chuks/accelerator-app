@@ -129,6 +129,11 @@ func (p productRepository) GetAll(page, limit int64) (*domain.PaginatedProducts,
 	}, nil
 }
 
+func (p productRepository) GetRestockRecommendation() (*domain.PaginatedProducts, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewProductRepository(db *sql.DB, logger *zap.Logger) domain.ProductRepository {
 	return &productRepository{
 		Db:     db,

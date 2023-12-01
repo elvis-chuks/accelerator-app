@@ -1,10 +1,12 @@
 package product
 
 import (
+	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"inventory/domain"
 	"inventory/pkg/logger"
+	"strconv"
 )
 
 type handler struct {
@@ -20,6 +22,10 @@ func New(router fiber.Router, repo domain.ProductRepository) {
 	handler.logger, _ = logger.Init()
 
 	router.Get("/:id", handler.Get)
+	router.Delete("/:id", handler.Delete)
+	router.Get("/", handler.GetAll)
+	router.Put("/:id", handler.Update)
+	router.Post("/", handler.Create)
 }
 
 func (h handler) Get(c *fiber.Ctx) error {
@@ -36,5 +42,91 @@ func (h handler) Get(c *fiber.Ctx) error {
 		"data": fiber.Map{
 			"product": product,
 		},
+	})
+}
+
+func (h handler) Delete(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	err := h.repo.Delete(id)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	return c.JSON(fiber.Map{
+		"error": false,
+	})
+}
+
+func (h handler) GetAll(c *fiber.Ctx) error {
+
+	pageStr := c.Query("page", "1")
+	limitStr := c.Query("limit", "10")
+
+	page, err := strconv.ParseInt(pageStr, 10, 64)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	limit, err := strconv.ParseInt(limitStr, 10, 64)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	response, err := h.repo.GetAll(page, limit)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	return c.JSON(fiber.Map{
+		"error": false,
+		"data":  response,
+	})
+}
+
+func (h handler) Update(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	var product domain.Product
+
+	if err := json.Unmarshal(c.Body(), &product); err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	response, err := h.repo.Update(id, product)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	return c.JSON(fiber.Map{
+		"error": false,
+		"data":  response,
+	})
+}
+
+func (h handler) Create(c *fiber.Ctx) error {
+
+	var product domain.Product
+
+	if err := json.Unmarshal(c.Body(), &product); err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	// TODO: validate input
+
+	response, err := h.repo.Create(product)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	return c.JSON(fiber.Map{
+		"error": false,
+		"data":  response,
 	})
 }

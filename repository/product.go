@@ -83,7 +83,7 @@ func (p productRepository) GetAll(page, limit int64) (*domain.PaginatedProducts,
 
 	offset := (page - 1) * limit
 
-	rows, err := p.Db.Query("SELECT * FROM products ORDER BY created_at OFFSET $1 LIMIT $2", offset, limit)
+	rows, err := p.Db.Query("SELECT * FROM products OFFSET $1 LIMIT $2", offset, limit)
 
 	defer func(rows *sql.Rows) {
 		err := rows.Close()

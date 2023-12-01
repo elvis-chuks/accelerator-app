@@ -67,6 +67,16 @@ func (p productRepository) Update(id string, product domain.Product) (*domain.Pr
 	return product_, nil
 }
 
+func (p productRepository) DecrementStock(id string, tx *sql.Tx) error {
+	_, err := tx.Exec("UPDATE products SET stock=stock-1 WHERE id=$1", id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (p productRepository) Delete(id string) error {
 	_, err := p.Db.Exec("DELETE from products WHERE id=$1", id)
 

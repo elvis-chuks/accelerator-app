@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"database/sql"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
@@ -35,4 +36,5 @@ type ProductRepository interface {
 	Delete(id string) error
 	GetAll(page, limit int64) (*PaginatedProducts, error)
 	GetRestockRecommendation() (*PaginatedProducts, error)
+	DecrementStock(id string, tx *sql.Tx) error
 }

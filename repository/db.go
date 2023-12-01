@@ -18,8 +18,10 @@ func SetupDb(l *zap.Logger) *domain.Repository {
 		log.Fatal(err)
 	}
 
+	productRepo := NewProductRepository(db, l)
+
 	return &domain.Repository{
-		ProductRepo: NewProductRepository(db, l),
-		SaleRepo:    NewSaleRepository(db, l),
+		ProductRepo: productRepo,
+		SaleRepo:    NewSaleRepository(db, l, productRepo),
 	}
 }

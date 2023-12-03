@@ -1,6 +1,9 @@
 run-app:
 	go run main.go
 
+run-container:
+	docker run -e DB_URL=$(DB_URL) -e SIGNING_KEY=$(SIGNING_KEY) accelerator-app/inventory:v1
+
 build:
 	docker build -t accelerator-app/inventory:v1 .
 

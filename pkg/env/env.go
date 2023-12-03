@@ -30,7 +30,12 @@ func LoadConfig(path string) {
 		return
 	}
 
-	viper.Set("DB_URL", config.DBURL)
-	viper.Set("SIGNING_KEY", config.SigningKey)
+	if config.DBURL != "" {
+		viper.Set("DB_URL", config.DBURL)
+	}
+
+	if config.SigningKey != "" {
+		viper.Set("SIGNING_KEY", config.SigningKey)
+	}
 	return
 }

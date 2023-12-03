@@ -16,7 +16,7 @@ COPY . ./
 ENV DB_URL=""
 ENV SIGNING_KEY=""
 
-RUN go build -o ./accelerator-app ./cmd/main.go
+RUN go build -o ./accelerator-app ./main.go
 
 ## Deploy
 FROM alpine:3.11.3

@@ -15,54 +15,19 @@ func initenv() {
 }
 
 func TestProductRepository_Get(t *testing.T) {
-	//l, _ := logger.Init()
-	//
-	////mockDB, mock, err := sqlmock.New()
-	////
-	////if err != nil {
-	////	t.Errorf("Error creating mock: %v", err)
-	////	return
-	////}
-	////
-	////defer func(mockDB *sql.DB) {
-	////	err := mockDB.Close()
-	////	if err != nil {
-	////		return
-	////	}
-	////}(mockDB)
-	////
-	////mock.ExpectExec(fmt.Sprintf("SELECT * FROM products WHERE id ='%s'", "fd971b3b-8147-42f9-ac8b-07e1469d2820")).
-	////	WillReturnResult(
-	////		sqlmock.NewResult(1, 1))
-	//
-	////[]string{"name", "id", "price", "stock", "min_stock", "supplier_id", "created_at", "updated_at"}).
-	////AddRow("Product_1", "fd971b3b-8147-42f9-ac8b-07e1469d2820", 53.31, 94, 86, "151afdd8-888b-4d5d-9b8c-3e6ae67cedc8", "2023-05-17 21:22:23.222091", "2023-05-17 21:22:23.222091"))
-	//
-	////result, err := NewProductRepository(mockDB, l).Get("fd971b3b-8147-42f9-ac8b-07e1469d2820")
-	////
-	////if err != nil {
-	////	t.Error(err)
-	////	return
-	////}
-	////
-	////fmt.Println(result)
-	//
-	//mock, err := pgxmock.NewPool()
-	//
-	//if err != nil {
-	//	t.Error(err)
-	//	return
-	//}
-	//
-	//defer mock.Close()
-	//
-	//mock.ExpectBegin()
-	//mock.ExpectQuery("SELECT * FROM products").WillReturnRows(pgxmock.NewRows([]string{"name", "id", "price", "stock", "min_stock", "supplier_id", "created_at", "updated_at"}).AddRow("Product_1", "fd971b3b-8147-42f9-ac8b-07e1469d2820", 53.31, 94, 86, "151afdd8-888b-4d5d-9b8c-3e6ae67cedc8", "2023-05-17 21:22:23.222091", "2023-05-17 21:22:23.222091"))
-	////WillReturnResult(pgxmock.NewResult("SELECT", 1))
-	//mock.ExpectCommit()
-	//
-	//result, err := NewProductRepository(mock, l).Get("fd971b3b-8147-42f9-ac8b-07e1469d2820")
+	l, _ := logger.Init()
+	initenv()
 
+	repo := SetupDb(l)
+
+	product, err := repo.ProductRepo.Get("35d24b1f-f0be-422f-bb66-9040d0356337")
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	fmt.Println(product)
 }
 
 func TestProductRepository_Create(t *testing.T) {

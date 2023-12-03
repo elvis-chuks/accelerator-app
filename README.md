@@ -28,17 +28,26 @@ $ make build
 $ make run-container DB_URL=$DB_URL SIGNING_KEY=$SIGNING_KEY
 ```
 the docker container should now be running on http://127.0.0.1:5001
-##### Tests
 
-To test all packages in the project run
-```bash
-$ make test
-```
+[//]: # (##### Tests)
 
-To test a specific repository function run
-```bash
-$ make test-repo-fxn fxn=functionName
-```
+[//]: # ()
+[//]: # (To test all packages in the project run)
+
+[//]: # (```bash)
+
+[//]: # ($ make test)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (To test a specific repository function run)
+
+[//]: # (```bash)
+
+[//]: # ($ make test-repo-fxn fxn=functionName)
+
+[//]: # (```)
 
 refer to Makefile for useage description
 ##### Complex Query

@@ -23,7 +23,7 @@ func SetupRouter(config Config) *fiber.App {
 	v1 := app.Group("/api/v1")
 
 	productRouter := v1.Group("/product", middleware.Protected())
-	saleRouter := v1.Group("/sale")
+	saleRouter := v1.Group("/sale", middleware.Protected())
 	authRouter := v1.Group("auth")
 
 	product.New(productRouter, config.ProductRepo)

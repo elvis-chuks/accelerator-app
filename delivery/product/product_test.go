@@ -66,17 +66,6 @@ func TestHandler_Create(t *testing.T) {
 
 	defer resp.Body.Close()
 
-	//var response map[string]interface{}
-	//
-	//err = json.NewDecoder(resp.Body).Decode(&response)
-	//
-	//if err != nil {
-	//	t.Error(err)
-	//	return
-	//}
-	//
-	//fmt.Println(response)
-
 	assert.Equal(t, 200, resp.StatusCode, "should pass")
 
 }

@@ -77,5 +77,5 @@ and to organize and present this information, I group them starting from the id,
 
 This query is particularly helpful in facilitating informed decision-making based on product sales and inventory levels.
 
-I would normally not have this here but this [database](postgres://psbqcmwo:6uuKbQHWNoc-SWIOiEyL_BefLAz6Gv_T@mouse.db.elephantsql.com/psbqcmwo?sslmode=disable) has data you can test with, it's a free postgresql instance.
+I would normally not have this here but this database postgres://psbqcmwo:6uuKbQHWNoc-SWIOiEyL_BefLAz6Gv_T@mouse.db.elephantsql.com/psbqcmwo?sslmode=disable has data you can test with, it's a free postgresql instance.
 

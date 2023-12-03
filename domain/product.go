@@ -11,8 +11,8 @@ type UUID struct {
 }
 
 type Product struct {
-	Name            string `json:"name"`
-	Id              UUID
+	Name            string    `json:"name"`
+	Id              UUID      `json:"id"`
 	Price           float64   `json:"price"`
 	Stock           int64     `json:"stock"`
 	MinStock        int64     `json:"min_stock"`

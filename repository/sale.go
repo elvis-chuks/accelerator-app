@@ -21,6 +21,10 @@ func (s saleRepository) Create(sale domain.Sale) (*domain.Sale, error) {
 	sale.CreatedAt = time.Now()
 	sale.UpdatedAt = time.Now()
 
+	if sale.Quantity == 0 {
+		return nil, errors.New("quantity cannot be 0")
+	}
+
 	product, err := s.productRepo.Get(sale.ProductId.String())
 
 	if err != nil {
@@ -33,9 +37,9 @@ func (s saleRepository) Create(sale domain.Sale) (*domain.Sale, error) {
 		return nil, err
 	}
 
-	sale.Total = product.Price * float64(sale.Amount)
+	sale.Total = product.Price * float64(sale.Quantity)
 
-	_, err = tx.Exec("INSERT INTO sales VALUES ($1, $2, $3, $4, $5, $6, $7)", sale.Id, sale.ProductName, sale.ProductId, sale.Amount, sale.Total, sale.CreatedAt, sale.UpdatedAt)
+	_, err = tx.Exec("INSERT INTO sales VALUES ($1, $2, $3, $4, $5, $6, $7)", sale.Id, sale.ProductName, sale.ProductId, sale.Quantity, sale.Total, sale.CreatedAt, sale.UpdatedAt)
 
 	if err != nil {
 		err = tx.Rollback()
@@ -45,7 +49,7 @@ func (s saleRepository) Create(sale domain.Sale) (*domain.Sale, error) {
 		return nil, err
 	}
 
-	err = s.productRepo.DecrementStock(sale.ProductId.String(), tx)
+	err = s.productRepo.DecrementStock(sale.ProductId.String(), sale.Quantity, tx)
 
 	if err != nil {
 		tx.Rollback()
@@ -68,7 +72,7 @@ func (s saleRepository) Get(id string) (*domain.Sale, error) {
 
 	var sale domain.Sale
 
-	err := row.Scan(&sale.Id, &sale.ProductName, &sale.ProductId, &sale.Amount, &sale.Total, &sale.CreatedAt, &sale.UpdatedAt)
+	err := row.Scan(&sale.Id, &sale.ProductName, &sale.ProductId, &sale.Quantity, &sale.Total, &sale.CreatedAt, &sale.UpdatedAt)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -81,7 +85,7 @@ func (s saleRepository) Get(id string) (*domain.Sale, error) {
 }
 
 func (s saleRepository) Update(id string, sale domain.Sale) (*domain.Sale, error) {
-	_, err := s.Db.Exec("UPDATE sales SET amount=$1,total=$2, updated_at=$3 WHERE id=$4", sale.Amount, sale.Total, time.Now(), id)
+	_, err := s.Db.Exec("UPDATE sales SET quantity=$1,total=$2, updated_at=$3 WHERE id=$4", sale.Quantity, sale.Total, time.Now(), id)
 
 	if err != nil {
 		return nil, err
@@ -126,7 +130,7 @@ func (s saleRepository) GetAll(page, limit int64) (*domain.PaginatedSales, error
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&sale.Id, &sale.ProductName, &sale.ProductId, &sale.Amount, &sale.Total, &sale.CreatedAt, &sale.UpdatedAt)
+		err = rows.Scan(&sale.Id, &sale.ProductName, &sale.ProductId, &sale.Quantity, &sale.Total, &sale.CreatedAt, &sale.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}

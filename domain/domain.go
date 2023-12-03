@@ -5,6 +5,7 @@ import "github.com/gofiber/fiber/v2"
 type Repository struct {
 	ProductRepo ProductRepository
 	SaleRepo    SaleRepository
+	UserRepo    UserRepository
 }
 
 func HandleError(c *fiber.Ctx, err error) error {

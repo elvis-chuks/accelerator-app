@@ -67,8 +67,8 @@ func (p productRepository) Update(id string, product domain.Product) (*domain.Pr
 	return product_, nil
 }
 
-func (p productRepository) DecrementStock(id string, tx *sql.Tx) error {
-	_, err := tx.Exec("UPDATE products SET stock=stock-1 WHERE id=$1", id)
+func (p productRepository) DecrementStock(id string, quantity int64, tx *sql.Tx) error {
+	_, err := tx.Exec("UPDATE products SET stock=stock-$1 WHERE id=$2", quantity, id)
 
 	if err != nil {
 		return err
@@ -139,9 +139,44 @@ func (p productRepository) GetAll(page, limit int64) (*domain.PaginatedProducts,
 	}, nil
 }
 
-func (p productRepository) GetRestockRecommendation() (*domain.PaginatedProducts, error) {
-	//TODO implement me
-	panic("implement me")
+func (p productRepository) GetRestockRecommendation(page, limit int64) (*domain.PaginatedProducts, error) {
+	var products []domain.Product
+	var product domain.Product
+
+	offset := (page - 1) * limit
+
+	rows, err := p.Db.Query("SELECT products.id, products.name, products.stock, products.min_stock, products.supplier_id, products.price, AVG(sales.quantity) AS avg_montly_sales FROM products JOIN sales ON products.id = sales.product_id WHERE products.stock < products.min_stock GROUP BY products.id, products.name, products.stock OFFSET $1 LIMIT $2;", offset, limit)
+
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			return
+		}
+	}(rows)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&product.Id, &product.Name, &product.Stock, &product.MinStock, &product.SupplierId, &product.Price, &product.AvgMonthlySales)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, product)
+	}
+
+	var count int
+
+	// TODO: figure out count for this usecase
+
+	return &domain.PaginatedProducts{
+		Products: products,
+		Page:     page,
+		Limit:    limit,
+		Total:    int64(count),
+		Next:     page + 1,
+	}, nil
 }
 
 func NewProductRepository(db *sql.DB, logger *zap.Logger) domain.ProductRepository {

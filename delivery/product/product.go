@@ -26,6 +26,7 @@ func New(router fiber.Router, repo domain.ProductRepository) {
 	router.Get("/", handler.GetAll)
 	router.Put("/:id", handler.Update)
 	router.Post("/", handler.Create)
+	router.Get("/recommend/restock", handler.RecommendRestock)
 }
 
 func (h handler) Get(c *fiber.Ctx) error {
@@ -128,5 +129,30 @@ func (h handler) Create(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"error": false,
 		"data":  response,
+	})
+}
+
+func (h handler) RecommendRestock(c *fiber.Ctx) error {
+
+	pageStr := c.Query("page", "1")
+	limitStr := c.Query("limit", "10")
+
+	page, err := strconv.ParseInt(pageStr, 10, 64)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	limit, err := strconv.ParseInt(limitStr, 10, 64)
+
+	if err != nil {
+		return domain.HandleError(c, err)
+	}
+
+	products, err := h.repo.GetRestockRecommendation(page, limit)
+
+	return c.JSON(fiber.Map{
+		"error": false,
+		"data":  products,
 	})
 }

@@ -11,14 +11,15 @@ type UUID struct {
 }
 
 type Product struct {
-	Name       string `json:"name"`
-	Id         UUID
-	Price      float64   `json:"price"`
-	Stock      int64     `json:"stock"`
-	MinStock   int64     `json:"min_stock"`
-	SupplierId UUID      `json:"supplier_id"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	Name            string `json:"name"`
+	Id              UUID
+	Price           float64   `json:"price"`
+	Stock           int64     `json:"stock"`
+	MinStock        int64     `json:"min_stock"`
+	SupplierId      UUID      `json:"supplier_id"`
+	AvgMonthlySales float64   `json:"avg_monthly_sales,omitempty"`
+	CreatedAt       time.Time `json:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at"`
 }
 
 type PaginatedProducts struct {
@@ -35,6 +36,6 @@ type ProductRepository interface {
 	Update(id string, product Product) (*Product, error)
 	Delete(id string) error
 	GetAll(page, limit int64) (*PaginatedProducts, error)
-	GetRestockRecommendation() (*PaginatedProducts, error)
-	DecrementStock(id string, tx *sql.Tx) error
+	GetRestockRecommendation(page, limit int64) (*PaginatedProducts, error)
+	DecrementStock(id string, quantity int64, tx *sql.Tx) error
 }

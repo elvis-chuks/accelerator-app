@@ -5,7 +5,8 @@ import (
 )
 
 type Config struct {
-	DBURL string `mapstructure:"DB_URL"`
+	DBURL      string `mapstructure:"DB_URL"`
+	SigningKey string `json:"SIGNING_KEY"`
 }
 
 func LoadConfig(path string) {
@@ -30,5 +31,6 @@ func LoadConfig(path string) {
 	}
 
 	viper.Set("DB_URL", config.DBURL)
+	viper.Set("SIGNING_KEY", config.SigningKey)
 	return
 }

@@ -6,7 +6,7 @@ type Sale struct {
 	Id          UUID      `json:"id"`
 	ProductName string    `json:"product_name"`
 	ProductId   UUID      `json:"product_id"`
-	Amount      int64     `json:"amount"`
+	Quantity    int64     `json:"quantity"`
 	Total       float64   `json:"total"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`

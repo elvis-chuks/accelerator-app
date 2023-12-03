@@ -31,6 +31,7 @@ func main() {
 	app := delivery.SetupRouter(delivery.Config{
 		ProductRepo: repo.ProductRepo,
 		SaleRepo:    repo.SaleRepo,
+		UserRepo:    repo.UserRepo,
 	})
 
 	addr := flag.String("addr", fmt.Sprintf(":%s", port), "http service address")

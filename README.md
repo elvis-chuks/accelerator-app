@@ -53,21 +53,23 @@ refer to Makefile for useage description
 ##### Complex Query
 ```sql
 SELECT
-    products.id,
-    products.name,
-    products.stock,
-    products.min_stock,
-    products.supplier_id,
-    products.price,
-    AVG(sales.quantity) AS avg_montly_sales
+  products.id,
+  products.name,
+  products.stock,
+  products.min_stock,
+  products.supplier_id,
+  products.price,
+  AVG(sales.quantity) AS avg_montly_sales
 FROM
-    products
-JOIN
-    sales ON products.id = sales.product_id
+  products
+    JOIN
+  sales ON products.id = sales.product_id
 WHERE
-    products.stock < products.min_stock
+  products.stock < products.min_stock
 GROUP BY
-    products.id, products.name, products.stock;
+  products.id, products.name, products.stock, products.min_stock
+HAVING
+  AVG(sales.quantity) < products.min_stock;
 ```
 In the query above, I retrieve records from the product table,
 I join it to the sales table using the one-to-many product id relationship

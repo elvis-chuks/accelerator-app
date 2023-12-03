@@ -145,7 +145,26 @@ func (p productRepository) GetRestockRecommendation(page, limit int64) (*domain.
 
 	offset := (page - 1) * limit
 
-	rows, err := p.Db.Query("SELECT products.id, products.name, products.stock, products.min_stock, products.supplier_id, products.price, AVG(sales.quantity) AS avg_montly_sales FROM products JOIN sales ON products.id = sales.product_id WHERE products.stock < products.min_stock GROUP BY products.id, products.name, products.stock OFFSET $1 LIMIT $2;", offset, limit)
+	rows, err := p.Db.Query(`
+		SELECT
+			products.id,
+			products.name,
+			products.stock,
+			products.min_stock,
+			products.supplier_id,
+			products.price,
+			AVG(sales.quantity) AS avg_montly_sales
+		FROM
+			products
+		JOIN
+			sales ON products.id = sales.product_id
+		WHERE
+			products.stock < products.min_stock
+		GROUP BY
+			products.id, products.name, products.stock, products.min_stock
+		HAVING
+			AVG(sales.quantity) < products.min_stock
+		OFFSET $1 LIMIT $2;`, offset, limit)
 
 	defer func(rows *sql.Rows) {
 		err := rows.Close()

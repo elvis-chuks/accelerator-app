@@ -18,7 +18,7 @@ func SetupDb(l *zap.Logger) *domain.Repository {
 		log.Fatal(err)
 	}
 
-	err = CreateTables(db, l)
+	err = CreateTables(db)
 
 	if err != nil {
 		log.Fatal(err)
@@ -33,9 +33,7 @@ func SetupDb(l *zap.Logger) *domain.Repository {
 	}
 }
 
-func CreateTables(db *sql.DB, l *zap.Logger) error {
-
-	l.Info("Setting up database")
+func CreateTables(db *sql.DB) error {
 
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS products (name VARCHAR(255),id UUID,price DOUBLE PRECISION,stock BIGINT,min_stock BIGINT,supplier_id UUID,created_at TIMESTAMP,updated_at TIMESTAMP,PRIMARY KEY (id));")
 

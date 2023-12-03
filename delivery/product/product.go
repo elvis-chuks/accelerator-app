@@ -2,6 +2,7 @@ package product
 
 import (
 	"encoding/json"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"inventory/domain"
@@ -118,7 +119,11 @@ func (h handler) Create(c *fiber.Ctx) error {
 		return domain.HandleError(c, err)
 	}
 
-	// TODO: validate input
+	err := validator.New().Struct(product)
+
+	if err != nil {
+		return domain.HandleValidationError(c, err)
+	}
 
 	response, err := h.repo.Create(product)
 

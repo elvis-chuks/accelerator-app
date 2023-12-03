@@ -11,12 +11,12 @@ type UUID struct {
 }
 
 type Product struct {
-	Name            string    `json:"name"`
+	Name            string    `json:"name" validate:"required,max=256"`
 	Id              UUID      `json:"id"`
-	Price           float64   `json:"price"`
-	Stock           int64     `json:"stock"`
-	MinStock        int64     `json:"min_stock"`
-	SupplierId      UUID      `json:"supplier_id"`
+	Price           float64   `json:"price" validate:"required"`
+	Stock           int64     `json:"stock" validate:"required,max=256"`
+	MinStock        int64     `json:"min_stock" validate:"required,max=256"`
+	SupplierId      UUID      `json:"supplier_id" validate:"required,uuid"`
 	AvgMonthlySales float64   `json:"avg_monthly_sales,omitempty"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`

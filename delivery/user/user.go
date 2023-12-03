@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"inventory/domain"
@@ -31,6 +32,12 @@ func (h handler) Signup(c *fiber.Ctx) error {
 
 	if err := json.Unmarshal(c.Body(), &user); err != nil {
 		return domain.HandleError(c, err)
+	}
+
+	err := validator.New().Struct(user)
+
+	if err != nil {
+		return domain.HandleValidationError(c, err)
 	}
 
 	existingUser, err := h.repo.GetByEmail(user.Email)
@@ -77,6 +84,14 @@ func (h handler) Signin(c *fiber.Ctx) error {
 
 	if err := json.Unmarshal(c.Body(), &user); err != nil {
 		return domain.HandleError(c, err)
+	}
+
+	if user.Email == "" {
+		return domain.HandleError(c, errors.New("email cannot be empty"))
+	}
+
+	if user.Password == "" {
+		return domain.HandleError(c, errors.New("password cannot be empty"))
 	}
 
 	existingUser, err := h.repo.GetByEmail(user.Email)

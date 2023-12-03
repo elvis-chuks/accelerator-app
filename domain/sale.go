@@ -4,9 +4,9 @@ import "time"
 
 type Sale struct {
 	Id          UUID      `json:"id"`
-	ProductName string    `json:"product_name"`
-	ProductId   UUID      `json:"product_id"`
-	Quantity    int64     `json:"quantity"`
+	ProductName string    `json:"product_name" validate:"required,max=256"`
+	ProductId   UUID      `json:"product_id" validate:"required,uuid"`
+	Quantity    int64     `json:"quantity" validate:"required,max=256"`
 	Total       float64   `json:"total"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
